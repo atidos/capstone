@@ -1,9 +1,8 @@
 import sys
 import cv2
-import argparse
 import torch
 import torchvision.transforms.transforms as transforms
-from face_detector.face_detector import HaarCascadeDetector
+from face_detector.face_detector import DnnDetector
 
 from SeResNeXt import se_resnext50
 from utils import get_label_age
@@ -25,10 +24,11 @@ class FaceModel:
 
         # Face detection
         root = 'face_detector'
-        self.face_detector = HaarCascadeDetector(root)
+        self.face_detector = DnnDetector(root)
 
 
     def getFaceData(self, image):
+        ageList = []
         # faces
         frame = image
         faces = self.face_detector.detect_faces(frame)
@@ -48,16 +48,17 @@ class FaceModel:
                 age = self.resnext(input_face)
 
                 torch.set_printoptions(precision=6)
-                softmax = torch.nn.Softmax()
+                softmax = torch.nn.functional.softmax
 
-                ages_soft = softmax(age.squeeze()).reshape(-1, 1).cpu().detach().numpy()
+                ages_soft = softmax(age.squeeze(), dim=-1).reshape(-1, 1).cpu().detach().numpy()
 
                 for i, ag in enumerate(ages_soft):
                     ag = round(ag.item(), 3)
 
                 age = torch.argmax(age)
-                percentage_age = round(ages_soft[age].item(), 2)
+                #percentage_age = round(ages_soft[age].item(), 2)
                 age = age.squeeze().cpu().detach().item()
 
                 age = get_label_age(age)
-                print("zort zort: " + age)
+                ageList.append(age)
+        return ageList
