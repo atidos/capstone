@@ -18,7 +18,7 @@ class FaceModel:
         self.resnext = se_resnext50(num_classes=5).to(device)
         self.resnext.eval()
         # Load model
-        checkpoint = torch.load("checkpoint/y_35_dataset_age_64_0.05_40_1e-06.pth.tar", map_location=device)
+        checkpoint = torch.load("saved models/y_35_dataset_age_64_0.05_40_1e-06.pth.tar", map_location=device)
         self.resnext.load_state_dict(checkpoint['resnext'])
 
         self.face_alignment = FaceAlignment()
