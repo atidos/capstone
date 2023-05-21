@@ -2,6 +2,7 @@ import sys
 import cv2
 import torch
 import torchvision.transforms.transforms as transforms
+import torchvision.transforms.functional as functional
 from face_detector.face_detector import DnnDetector
 
 from SeResNeXt import se_resnext50
@@ -41,7 +42,14 @@ class FaceModel:
             input_face = cv2.resize(input_face, (100, 100))
 
             input_face = transforms.ToTensor()(input_face).to(device)
+
+            input_face = functional.convert_image_dtype(input_face, dtype=torch.uint8)
+            input_face = functional.equalize(input_face)
+            input_face = functional.convert_image_dtype(input_face, dtype=torch.float32)
+
             input_face = torch.unsqueeze(input_face, 0)
+            
+            
 
             with torch.no_grad():
                 input_face = input_face.to(device)
