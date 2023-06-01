@@ -49,6 +49,13 @@ def get_label_age(label : int) -> str:
     }
     return label_age_map[label]
 
+def get_label_gender(label : int) -> str:
+    label_gender_map = {
+        0: 'Female',
+        1: 'Male'
+    }
+    return label_gender_map[label]
+
 def tensor_to_numpy(image):
     if type(image) != np.ndarray:
         return image.cpu().squeeze().numpy()
