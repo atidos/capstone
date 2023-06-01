@@ -129,7 +129,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--haar', action='store_true', help='run the haar cascade face detector')
-    parser.add_argument('--pretrained',type=str,default='checkpoint/y_35_dataset_age_64_0.05_40_1e-06.pth.tar'
+    parser.add_argument('--pretrained',type=str,default='saved models/resnext_41_dataset_age_64_0.005_40_1e-06.pth.tar'
                         ,help='load weights')
     parser.add_argument('--head_pose', action='store_true', help='visualization of head pose euler angles')
     parser.add_argument('--path', type=str, default='', help='path to video to test')

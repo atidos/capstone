@@ -33,8 +33,8 @@ def parse_args():
     parser.add_argument('--logging', type=str, default='checkpoint', help='path of logging')
     parser.add_argument('--lr', type=float, default=0.005, help='learning rate')
     parser.add_argument('--weight_decay', type=float, default=1e-6, help='optimizer weight decay')
-    parser.add_argument('--datapath', type=str, default='data/dataset-age', help='root path of dataset')
-    parser.add_argument('--test_datapath', type=str, default='data/dataset-age', help='root path of test dataset')
+    parser.add_argument('--datapath', type=str, default='data/dataset_age', help='root path of dataset')
+    parser.add_argument('--test_datapath', type=str, default='data/dataset_age', help='root path of test dataset')
     parser.add_argument('--pretrained', type=str,default='checkpoint/train_original.pth.tar',help='load checkpoint')
     parser.add_argument('--resume', action='store_true', help='resume from pretrained path specified in prev arg')
     parser.add_argument('--savepath', type=str, default='checkpoint', help='save checkpoint path')
@@ -63,9 +63,11 @@ handlers=[logging.FileHandler(args.logdir + "/resnext50_" +
 # tensorboard
 writer = tensorboard.SummaryWriter(args.tensorboard)
 
-transform = transforms.Compose([transforms.RandomEqualize(p=1),
+transform = transforms.Compose([# transforms.RandomEqualize(p=1),
                                 # transforms.ToPILImage(),
-                                transforms.RandomHorizontalFlip(p=0.5),
+                                transforms.ColorJitter(brightness=(0.5,1.5),contrast=(1),saturation=(0.5,1.5),hue=(-0.1,0.1)),
+                                transforms.RandomHorizontalFlip(),
+                                transforms.RandomRotation(degrees=30),
                                 transforms.ToTensor()])
 
 def main():

@@ -76,8 +76,8 @@ def plotLoss(data, labels=[], colors=[]):
     plt.ylabel("Validation Loss")
     plt.show()
 
-plt.title("resnext_dataset-age_64_0.05_40_1e-06")
+plt.title("resnext50_dataset_age_64_0.005_40_1e-06")
 
-a = get_train_data("logs/resnext_dataset-age_64_0.05_40_1e-06")
+a = get_train_data("logs/resnext50_dataset_age_64_0.005_40_1e-06")
 plotLoss([a])
 

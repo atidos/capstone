@@ -28,7 +28,7 @@ class FaceModel:
         self.face_detector = DnnDetector(root)
 
 
-    def getFaceData(self, image):
+    def getFaceData(self, image, debug=False):
         ageList = []
         # faces
         frame = image
@@ -43,9 +43,9 @@ class FaceModel:
 
             input_face = transforms.ToTensor()(input_face).to(device)
 
-            input_face = functional.convert_image_dtype(input_face, dtype=torch.uint8)
-            input_face = functional.equalize(input_face)
-            input_face = functional.convert_image_dtype(input_face, dtype=torch.float32)
+            # input_face = functional.convert_image_dtype(input_face, dtype=torch.uint8)
+            # input_face = functional.equalize(input_face)
+            # input_face = functional.convert_image_dtype(input_face, dtype=torch.float32)
 
             input_face = torch.unsqueeze(input_face, 0)
             
@@ -69,4 +69,8 @@ class FaceModel:
 
                 age = get_label_age(age)
                 ageList.append(age)
+            
+            if debug:
+                cv2.imshow("Face " + (len(ageList)+1), input_face)
+
         return ageList
