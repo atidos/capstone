@@ -41,18 +41,18 @@ def get_label_emotion(label: int) -> str:
 
 def get_label_age(label : int) -> str:
     label_age_map = {
-        0: '0-3',
-        1: '20-39',
-        2: '4-19',
-        3: '40-69',
-        4: '70+'
+        0: 'Baby',
+        1: 'Kid',
+        2: 'Adolescent',
+        3: 'Adult',
+        4: 'Old'
     }
     return label_age_map[label]
 
 def get_label_gender(label : int) -> str:
     label_gender_map = {
-        0: 'Female',
-        1: 'Male'
+        0: 'Male',
+        1: 'Female'
     }
     return label_gender_map[label]
 

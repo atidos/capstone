@@ -6,8 +6,10 @@ from tkinter import Tk
 
 model = FaceModel()
 
-image = pyautogui.screenshot()
-image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-print(model.getFaceData(image))
-
+#image = np.array(pyautogui.screenshot())
+#image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+image = cv2.imread("data/dataset_gender_UTK/Test/2_Female/757.jpg")
+image = cv2.resize(image, (200, 200), interpolation=cv2.INTER_LINEAR)
+print(model.getFaceData(image, debug=True))
+cv2.waitKey(0)
 print(image.dtype)

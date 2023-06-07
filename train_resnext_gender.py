@@ -31,11 +31,11 @@ def parse_args():
     parser.add_argument('--batch_size', type=int, default=64, help="training batch size")
     parser.add_argument('--tensorboard', type=str, default='checkpoint/tensorboard', help='path log dir of tensorboard')
     parser.add_argument('--logging', type=str, default='checkpoint', help='path of logging')
-    parser.add_argument('--lr', type=float, default=0.01, help='learning rate')
+    parser.add_argument('--lr', type=float, default=0.005, help='learning rate')
     parser.add_argument('--weight_decay', type=float, default=1e-6, help='optimizer weight decay')
-    parser.add_argument('--datapath', type=str, default='data/dataset_gender', help='root path of dataset')
-    parser.add_argument('--test_datapath', type=str, default='data/dataset_gender', help='root path of test dataset')
-    parser.add_argument('--pretrained', type=str,default='checkpoint/train_original.pth.tar',help='load checkpoint')
+    parser.add_argument('--datapath', type=str, default='data/dataset_gender_UTK', help='root path of dataset')
+    parser.add_argument('--test_datapath', type=str, default='data/dataset_gender_UTK', help='root path of test dataset')
+    parser.add_argument('--pretrained', type=str,default='models gender/resnext_36_dataset_gender_UTK_64_0.005_40_1e-06.pth.tar',help='load checkpoint')
     parser.add_argument('--resume', action='store_true', help='resume from pretrained path specified in prev arg')
     parser.add_argument('--savepath', type=str, default='checkpoint', help='save checkpoint path')
     parser.add_argument('--savefreq', type=int, default=1, help="save weights each freq num of epochs")
@@ -59,16 +59,18 @@ handlers=[logging.FileHandler(args.logdir + "/resnext50_" +
                               str(args.batch_size) + "_" +
                               str(args.lr) + "_" +
                               str(args.lr_patience) + "_" +
-                              str(args.weight_decay), mode='w'), logging.StreamHandler()])
+                              str(args.weight_decay), mode='w'), logging.StreamHandler()
+                              ])
 # tensorboard
 writer = tensorboard.SummaryWriter(args.tensorboard)
 
 transform = transforms.Compose([# transforms.RandomEqualize(p=1),
                                 # transforms.ToPILImage(),
-                                transforms.ColorJitter(brightness=(0.5,1.5),contrast=(1),saturation=(0.5,1.5),hue=(-0.1,0.1)),
+                                transforms.ColorJitter(brightness=(0.7,1.3),contrast=(0.7,1.3),saturation=(0.7,1.3),hue=(-0.05,0.05)),
                                 transforms.RandomHorizontalFlip(),
                                 transforms.RandomRotation(degrees=10),
-                                transforms.ToTensor()])
+                                transforms.ToTensor(),
+                                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
 def main():
     # ========= dataloaders ===========
@@ -78,12 +80,14 @@ def main():
     testDataset = datasets.ImageFolder(args.test_datapath + "/Test", transform=transform)
     test_dataloader = torch.utils.data.DataLoader(testDataset, batch_size=args.batch_size, shuffle=True)
 
+    print(trainDataset.class_to_idx)
+
     start_epoch = 0
 
     # ======== models & loss ==========
     resnext = SeResNeXt.se_resnext50(num_classes=2)
 
-    loss = nn.CrossEntropyLoss()
+    loss = nn.CrossEntropyLoss().to(device)
 
     # ========= load weights ===========
     if args.resume or args.evaluate:
@@ -223,7 +227,7 @@ def validate(model, criterion, dataloader, epoch):
         if args.evaluate:
             conf_matrix = confusion_matrix(total_labels, total_pred, normalize='true')
             print('Confusion Matrix\n', conf_matrix)
-            visualize_confusion_matrix(conf_matrix)
+            visualize_confusion_matrix(conf_matrix, size=2)
 
         return val_loss, accuracy, percision, recall
 
