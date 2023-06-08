@@ -72,7 +72,8 @@ transform = transforms.Compose([transforms.Grayscale(num_output_channels=1),
                                 transforms.RandomRotation(degrees=10),
                                 transforms.RandomEqualize(p=1),
                                 transforms.ToTensor(),
-                                transforms.Normalize((0.5), (0.5))])
+                                # transforms.Normalize((0.5), (0.5))
+                                ])
 
 def main():
     # ========= dataloaders ===========

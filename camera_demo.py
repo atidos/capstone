@@ -24,13 +24,13 @@ from face_alignment.face_alignment import FaceAlignment
 sys.path.insert(1, 'face_detector')
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 transform = transforms.Compose([transforms.ToPILImage(),
+                                transforms.Grayscale(num_output_channels=1),
                                 transforms.RandomEqualize(p=1),
-                                transforms.Grayscale(),
                                 #transforms.ColorJitter(brightness=(0.8,1.2),contrast=(0.8,1.2),saturation=(0.8,1.2),hue=(-0.05,0.05)),
                                 #transforms.RandomHorizontalFlip(),
                                 #transforms.RandomRotation(degrees=10),
                                 transforms.ToTensor(),
-                                transforms.Normalize((0.5), (0.5))
+                                #transforms.Normalize((0.5), (0.5))
                                 ])
 
 def main(args):
@@ -121,7 +121,7 @@ def main(args):
                 age = torch.argmax(age)
 
                 percentage_age = round(ages_soft[age].item(), 2)
-
+                
                 age = age.squeeze().cpu().detach().item()
 
                 age = get_label_age(age)
@@ -143,7 +143,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--haar', action='store_true', help='run the haar cascade face detector')
-    parser.add_argument('--pretrained',type=str,default='saved models/resnext_52_dataset_age_UTK_gray_64_0.005_40_1e-06.pth.tar'
+    parser.add_argument('--pretrained',type=str,default='models age/resnext_23_dataset_age_UTK_gray_64_0.005_40_1e-06.pth.tar'
                         ,help='load weights')
     parser.add_argument('--head_pose', action='store_true', help='visualization of head pose euler angles')
     parser.add_argument('--path', type=str, default='', help='path to video to test')
