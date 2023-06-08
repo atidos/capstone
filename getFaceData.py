@@ -18,7 +18,7 @@ transform = transforms.Compose([#transforms.ToPILImage(),
                                 #transforms.RandomEqualize(p=1),
                                 #transforms.ColorJitter(brightness=(0.8,1.2),contrast=(0.8,1.2),saturation=(0.8,1.2),hue=(-0.05,0.05)),
                                 #transforms.RandomHorizontalFlip(),
-                                #transforms.RandomRotation(degrees=10)
+                                #transforms.RandomRotation(degrees=10),
                                 transforms.ToTensor(),
                                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                 ])
@@ -58,17 +58,13 @@ class FaceModel:
 
             # preprocessing
             input_face = self.face_alignment.frontalize_face(face, frame)
-            input_face = cv2.resize(input_face, (100, 100), interpolation=cv2.INTER_LINEAR)
-
-            debug_img = np.array(input_face)
-            if debug:
-                cv2.imshow("Face" + str(len(dataDictArray)), debug_img)
+            input_face = cv2.resize(input_face, (100, 100))
             
-            input_face = transform(input_face)
-            
-            input_face = input_face.unsqueeze(0)
+            debug_img = input_face
 
-            print(input_face.shape)
+            input_face = transform(input_face).to(device)
+
+            input_face = torch.unsqueeze(input_face, 0)
 
             with torch.no_grad():
                 input_face = input_face.to(device)
@@ -77,9 +73,11 @@ class FaceModel:
 
                 torch.set_printoptions(precision=6)
                 softmax = torch.nn.functional.softmax
-
+            
                 ages_soft = softmax(age.squeeze(), dim=-1).reshape(-1, 1).cpu().detach().numpy()
+                ages_soft = np.round(ages_soft, 3)
                 gender_soft = softmax(gender.squeeze(), dim=-1).reshape(-1, 1).cpu().detach().numpy()
+                gender_soft = np.round(gender_soft, 3)
 
                 for i, ag in enumerate(ages_soft):
                     ag = round(ag.item(), 3)
@@ -101,6 +99,12 @@ class FaceModel:
                 gender = get_label_gender(gender)
                 dataDict['gender'] = gender
                 dataDictArray.append(dataDict)
+
+                if debug:
+                    cv2.imshow(str(len(dataDictArray)) +" " +age + " " + gender, cv2.resize(debug_img, (500, 500), interpolation=cv2.INTER_NEAREST))
+            
+            
+           
 
         return dataDictArray
     

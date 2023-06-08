@@ -17,12 +17,21 @@ from torch.functional import norm
 import torchvision.transforms.transforms as transforms
 from face_detector.face_detector import DnnDetector, HaarCascadeDetector
 
-from SeResNeXt import se_resnext50
-from utils import normalization, histogram_equalization, standerlization, get_label_age
+from SeResNeXt_gray import se_resnext50
+from utils import normalization, histogram_equalization, standerlization, get_label_age, get_label_gender
 from face_alignment.face_alignment import FaceAlignment
 
 sys.path.insert(1, 'face_detector')
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+transform = transforms.Compose([transforms.ToPILImage(),
+                                transforms.RandomEqualize(p=1),
+                                transforms.Grayscale(),
+                                #transforms.ColorJitter(brightness=(0.8,1.2),contrast=(0.8,1.2),saturation=(0.8,1.2),hue=(-0.05,0.05)),
+                                #transforms.RandomHorizontalFlip(),
+                                #transforms.RandomRotation(degrees=10),
+                                transforms.ToTensor(),
+                                transforms.Normalize((0.5), (0.5))
+                                ])
 
 def main(args):
     # Model
@@ -51,6 +60,9 @@ def main(args):
             video = cv2.VideoCapture(args.path) 
         else:
             video = cv2.VideoCapture(0) # 480, 640
+            video.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+            video.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+
         isOpened = video.isOpened()
         print('video.isOpened:', isOpened)
     
@@ -65,8 +77,10 @@ def main(args):
             isOpened = video.isOpened()    
         # if loaded video or image (not live camera) .. resize it 
         if args.path:
-            frame = cv2.resize(frame, (640, 480))
-
+            frame = cv2.resize(frame, (1080, 720))
+            
+        # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        print(frame.shape)
         # time
         t2 = time.time()
         fps = round(1/(t2-t1))
@@ -85,7 +99,7 @@ def main(args):
             #input_face = histogram_equalization(input_face)
             cv2.imshow('input face', cv2.resize(input_face, (120, 120)))
 
-            input_face = transforms.ToTensor()(input_face).to(device)
+            input_face = transform(input_face)
             input_face = torch.unsqueeze(input_face, 0)
 
             with torch.no_grad():
@@ -129,7 +143,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--haar', action='store_true', help='run the haar cascade face detector')
-    parser.add_argument('--pretrained',type=str,default='saved models/resnext_41_dataset_age_64_0.005_40_1e-06.pth.tar'
+    parser.add_argument('--pretrained',type=str,default='saved models/resnext_52_dataset_age_UTK_gray_64_0.005_40_1e-06.pth.tar'
                         ,help='load weights')
     parser.add_argument('--head_pose', action='store_true', help='visualization of head pose euler angles')
     parser.add_argument('--path', type=str, default='', help='path to video to test')

@@ -21,6 +21,7 @@ import utils
 from utils import visualize_confusion_matrix
 from sklearn.metrics import precision_score, recall_score, accuracy_score, confusion_matrix
 import SeResNeXt
+import SeResNeXt_gray
 
 cudnn.benchmark = True
 cudnn.enabled = True
@@ -33,8 +34,8 @@ def parse_args():
     parser.add_argument('--logging', type=str, default='checkpoint', help='path of logging')
     parser.add_argument('--lr', type=float, default=0.005, help='learning rate')
     parser.add_argument('--weight_decay', type=float, default=1e-6, help='optimizer weight decay')
-    parser.add_argument('--datapath', type=str, default='data/dataset_age_UTK_custom', help='root path of dataset')
-    parser.add_argument('--test_datapath', type=str, default='data/dataset_age_UTK_custom', help='root path of test dataset')
+    parser.add_argument('--datapath', type=str, default='data/dataset_age_UTK_gray', help='root path of dataset')
+    parser.add_argument('--test_datapath', type=str, default='data/dataset_age_UTK_gray', help='root path of test dataset')
     parser.add_argument('--pretrained', type=str,default='models age/resnext_37_dataset_age_UTK_custom_64_0.005_40_1e-06.pth.tar',help='load checkpoint')
     parser.add_argument('--resume', action='store_true', help='resume from pretrained path specified in prev arg')
     parser.add_argument('--savepath', type=str, default='checkpoint', help='save checkpoint path')
@@ -64,13 +65,14 @@ handlers=[logging.FileHandler(args.logdir + "/resnext50_" +
 # tensorboard
 writer = tensorboard.SummaryWriter(args.tensorboard)
 
-transform = transforms.Compose([# transforms.RandomEqualize(p=1),
+transform = transforms.Compose([transforms.Grayscale(num_output_channels=1),
                                 # transforms.ToPILImage(),
                                 transforms.ColorJitter(brightness=(0.7,1.3),contrast=(0.7,1.3),saturation=(0.7,1.3),hue=(-0.05,0.05)),
                                 transforms.RandomHorizontalFlip(),
                                 transforms.RandomRotation(degrees=10),
+                                transforms.RandomEqualize(p=1),
                                 transforms.ToTensor(),
-                                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+                                transforms.Normalize((0.5), (0.5))])
 
 def main():
     # ========= dataloaders ===========
@@ -85,7 +87,7 @@ def main():
     start_epoch = 0
 
     # ======== models & loss ==========
-    resnext = SeResNeXt.se_resnext50(num_classes=5)
+    resnext = SeResNeXt_gray.se_resnext50(num_classes=5)
 
     loss = nn.CrossEntropyLoss(weight=torch.tensor([22/1.5, 22/1.4, 22/3.6, 22/14, 22/1.4]).to(device))
 
