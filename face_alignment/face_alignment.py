@@ -70,6 +70,12 @@ class FaceAlignment:
         filtered_landmarks = self.get_eyes_landmarks(landmarks, face_rect)
         # get the angle of the line between the 2 eyes
         angle = self.get_face_rotation_angle(filtered_landmarks)
+
+        if abs(angle > 90):
+            angle = angle - 180
+        if abs(angle < -90):
+            angle = angle + 180
+
         # rotation face center
         center = self.get_rotation_center(filtered_landmarks, face_rect)
         # rotation matrix

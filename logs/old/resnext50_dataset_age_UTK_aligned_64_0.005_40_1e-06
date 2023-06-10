@@ -1,0 +1,120 @@
+[	training epoch=0 .. train_loss=1.382
+[	validation epoch=0 .. val_loss=1.272
+[	Accuracy = 52.1 % .. Percision = 51.300000000000004 % .. Recall = 51.0 % 
+
+[	training epoch=1 .. train_loss=1.011
+[	validation epoch=1 .. val_loss=0.852
+[	Accuracy = 62.6 % .. Percision = 60.8 % .. Recall = 61.3 % 
+
+[	training epoch=2 .. train_loss=0.885
+[	validation epoch=2 .. val_loss=0.902
+[	Accuracy = 63.6 % .. Percision = 66.8 % .. Recall = 63.9 % 
+
+[	training epoch=3 .. train_loss=0.83
+[	validation epoch=3 .. val_loss=0.635
+[	Accuracy = 66.5 % .. Percision = 66.2 % .. Recall = 66.0 % 
+
+[	training epoch=4 .. train_loss=0.757
+[	validation epoch=4 .. val_loss=0.626
+[	Accuracy = 70.89999999999999 % .. Percision = 70.19999999999999 % .. Recall = 70.3 % 
+
+[	training epoch=5 .. train_loss=0.717
+[	validation epoch=5 .. val_loss=0.592
+[	Accuracy = 71.8 % .. Percision = 71.1 % .. Recall = 70.7 % 
+
+[	training epoch=6 .. train_loss=0.658
+[	validation epoch=6 .. val_loss=0.563
+[	Accuracy = 70.8 % .. Percision = 68.7 % .. Recall = 69.39999999999999 % 
+
+[	training epoch=7 .. train_loss=0.628
+[	validation epoch=7 .. val_loss=0.584
+[	Accuracy = 71.1 % .. Percision = 71.89999999999999 % .. Recall = 69.89999999999999 % 
+
+[	training epoch=8 .. train_loss=0.593
+[	validation epoch=8 .. val_loss=0.55
+[	Accuracy = 72.8 % .. Percision = 71.89999999999999 % .. Recall = 72.0 % 
+
+[	training epoch=9 .. train_loss=0.579
+[	validation epoch=9 .. val_loss=0.532
+[	Accuracy = 75.3 % .. Percision = 74.4 % .. Recall = 74.0 % 
+
+[	training epoch=10 .. train_loss=0.558
+[	validation epoch=10 .. val_loss=0.551
+[	Accuracy = 74.3 % .. Percision = 74.6 % .. Recall = 73.9 % 
+
+[	training epoch=11 .. train_loss=0.539
+[	validation epoch=11 .. val_loss=0.543
+[	Accuracy = 75.2 % .. Percision = 74.8 % .. Recall = 74.2 % 
+
+[	training epoch=12 .. train_loss=0.519
+[	validation epoch=12 .. val_loss=0.543
+[	Accuracy = 73.5 % .. Percision = 72.39999999999999 % .. Recall = 72.39999999999999 % 
+
+[	training epoch=13 .. train_loss=0.508
+[	validation epoch=13 .. val_loss=0.861
+[	Accuracy = 66.10000000000001 % .. Percision = 71.2 % .. Recall = 65.4 % 
+
+[	training epoch=14 .. train_loss=0.509
+[	validation epoch=14 .. val_loss=0.493
+[	Accuracy = 75.6 % .. Percision = 74.4 % .. Recall = 74.3 % 
+
+[	training epoch=15 .. train_loss=0.472
+[	validation epoch=15 .. val_loss=0.552
+[	Accuracy = 74.0 % .. Percision = 73.2 % .. Recall = 73.2 % 
+
+[	training epoch=16 .. train_loss=0.453
+[	validation epoch=16 .. val_loss=0.496
+[	Accuracy = 75.1 % .. Percision = 74.0 % .. Recall = 74.1 % 
+
+[	training epoch=17 .. train_loss=0.43
+[	validation epoch=17 .. val_loss=0.502
+[	Accuracy = 76.7 % .. Percision = 75.8 % .. Recall = 75.7 % 
+
+[	training epoch=18 .. train_loss=0.407
+[	validation epoch=18 .. val_loss=0.56
+[	Accuracy = 76.6 % .. Percision = 76.0 % .. Recall = 75.7 % 
+
+[	training epoch=19 .. train_loss=0.388
+[	validation epoch=19 .. val_loss=0.711
+[	Accuracy = 74.1 % .. Percision = 74.1 % .. Recall = 73.7 % 
+
+[	training epoch=20 .. train_loss=0.376
+[	validation epoch=20 .. val_loss=0.59
+[	Accuracy = 74.1 % .. Percision = 73.7 % .. Recall = 73.3 % 
+
+[	training epoch=21 .. train_loss=0.37
+[	validation epoch=21 .. val_loss=0.67
+[	Accuracy = 75.3 % .. Percision = 74.9 % .. Recall = 74.6 % 
+
+[	training epoch=22 .. train_loss=0.354
+[	validation epoch=22 .. val_loss=0.665
+[	Accuracy = 75.3 % .. Percision = 75.1 % .. Recall = 74.4 % 
+
+[	training epoch=23 .. train_loss=0.345
+[	validation epoch=23 .. val_loss=0.765
+[	Accuracy = 72.6 % .. Percision = 72.89999999999999 % .. Recall = 72.1 % 
+
+[	training epoch=24 .. train_loss=0.314
+[	validation epoch=24 .. val_loss=0.695
+[	Accuracy = 74.2 % .. Percision = 74.7 % .. Recall = 73.6 % 
+
+[	training epoch=25 .. train_loss=0.304
+[	validation epoch=25 .. val_loss=0.737
+[	Accuracy = 75.9 % .. Percision = 76.9 % .. Recall = 75.6 % 
+
+[	training epoch=26 .. train_loss=0.286
+[	validation epoch=26 .. val_loss=0.796
+[	Accuracy = 74.0 % .. Percision = 74.9 % .. Recall = 74.0 % 
+
+[	training epoch=27 .. train_loss=0.266
+[	validation epoch=27 .. val_loss=0.792
+[	Accuracy = 73.1 % .. Percision = 74.0 % .. Recall = 73.1 % 
+
+[	training epoch=28 .. train_loss=0.272
+[	validation epoch=28 .. val_loss=0.873
+[	Accuracy = 72.3 % .. Percision = 73.0 % .. Recall = 72.0 % 
+
+[	training epoch=29 .. train_loss=0.26
+[	validation epoch=29 .. val_loss=0.864
+[	Accuracy = 74.8 % .. Percision = 75.2 % .. Recall = 74.4 % 
+

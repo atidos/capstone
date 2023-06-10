@@ -58,9 +58,18 @@ class DnnDetector(FaceDetectorIface):
             # model output is percentage of bbox dims
             box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
             box = box.astype("int")
+            
             (x1,y1, x2,y2) = box
+            
+            width = x2 - x1
+            height = y2 - y1
+
+            center = ((x1 + x2) / 2, (y1 + y2) / 2)
+            
+            l = max(width,height)
 
             # x,y,w,h
-            faces.append((x1,y1,x2-x1,y2-y1))
+            faces.append((int(center[0] - l//2), int(center[1] - l//2), l, l))
+            
             # print(confidence)
         return faces

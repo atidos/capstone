@@ -6,12 +6,11 @@ from tkinter import Tk
 
 model = FaceModel()
 
-#image = np.array(pyautogui.screenshot())
+image = np.array(pyautogui.screenshot())
 
-image = cv2.imread("woman.jpg")
-image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+#image = cv2.imread("woman.jpg")
+#image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-#image = cv2.resize(image, (1080, 720))
 
 print(model.getFaceData(image, debug=True))
 cv2.waitKey(0)

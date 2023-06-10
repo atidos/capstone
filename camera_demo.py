@@ -17,20 +17,19 @@ from torch.functional import norm
 import torchvision.transforms.transforms as transforms
 from face_detector.face_detector import DnnDetector, HaarCascadeDetector
 
-from SeResNeXt_gray import se_resnext50
+from SeResNeXt import se_resnext50
 from utils import normalization, histogram_equalization, standerlization, get_label_age, get_label_gender
 from face_alignment.face_alignment import FaceAlignment
 
 sys.path.insert(1, 'face_detector')
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-transform = transforms.Compose([transforms.ToPILImage(),
-                                transforms.Grayscale(num_output_channels=1),
-                                transforms.RandomEqualize(p=1),
-                                #transforms.ColorJitter(brightness=(0.8,1.2),contrast=(0.8,1.2),saturation=(0.8,1.2),hue=(-0.05,0.05)),
+transform = transforms.Compose([#transforms.ToPILImage(),
+                                #transforms.Grayscale(num_output_channels=1),
+                                #transforms.RandomEqualize(p=1),
                                 #transforms.RandomHorizontalFlip(),
                                 #transforms.RandomRotation(degrees=10),
                                 transforms.ToTensor(),
-                                #transforms.Normalize((0.5), (0.5))
+                                transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
                                 ])
 
 def main(args):
@@ -143,7 +142,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--haar', action='store_true', help='run the haar cascade face detector')
-    parser.add_argument('--pretrained',type=str,default='models age/resnext_23_dataset_age_UTK_gray_64_0.005_40_1e-06.pth.tar'
+    parser.add_argument('--pretrained',type=str,default='models age/resnext_17_dataset_age_UTK_aligned_64_0.005_40_1e-06.pth.tar'
                         ,help='load weights')
     parser.add_argument('--head_pose', action='store_true', help='visualization of head pose euler angles')
     parser.add_argument('--path', type=str, default='', help='path to video to test')

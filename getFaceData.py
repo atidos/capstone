@@ -6,7 +6,6 @@ import torchvision.transforms.transforms as transforms
 import torchvision.transforms.functional as functional
 from face_detector.face_detector import DnnDetector
 
-from SeResNeXt_gray import se_resnext50 as se_resnext_gray
 from SeResNeXt import se_resnext50
 from utils import get_label_age
 from utils import get_label_gender
@@ -16,17 +15,17 @@ import numpy as np
 sys.path.insert(1, 'face_detector')
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 transform = transforms.Compose([transforms.ToPILImage(),
-                                transforms.RandomEqualize(p=1),
-                                transforms.Grayscale(num_output_channels=1),
+                                #transforms.Grayscale(num_output_channels=1),
+                                #transforms.RandomEqualize(p=1),
                                 #transforms.RandomHorizontalFlip(),
                                 #transforms.RandomRotation(degrees=10),
                                 transforms.ToTensor(),
-                                #transforms.Normalize((0.5), (0.5))
+                                transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
                                 ])
 class FaceModel:
     def __init__(self):
         # AgeModel
-        self.resnext = se_resnext_gray(num_classes=5).to(device)
+        self.resnext = se_resnext50(num_classes=5).to(device)
         self.resnext.eval()
         # GenderModel
         self.resnextGender = se_resnext50(num_classes=2).to(device)
@@ -55,10 +54,9 @@ class FaceModel:
         faces = self.face_detector.detect_faces(frame)
 
         for face in faces:
-            # (x, y, w, h) = face
-
-            # preprocessing
+            
             input_face = self.face_alignment.frontalize_face(face, frame)
+
             input_face = cv2.resize(input_face, (100, 100))
             
             debug_img = input_face
