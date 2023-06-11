@@ -46,7 +46,7 @@ class FaceModel:
         root = 'face_detector'
         self.face_detector = DnnDetector(root)
 
-    def getFaceData(self, image, debug=True):
+    def getFaceData(self, image, debug=False):
         
         dataDictArray = []
         # faces
@@ -100,10 +100,8 @@ class FaceModel:
                 dataDictArray.append(dataDict)
 
                 if debug:
-                    cv2.imshow(str(len(dataDictArray)) +" " +age + " " + gender, cv2.resize(debug_img, (500, 500), interpolation=cv2.INTER_NEAREST))
-            
-            
-           
+                    debug_img = cv2.cvtColor(debug_img, cv2.COLOR_BGR2RGB)
+                    cv2.imshow(str(len(dataDictArray)) + " " + age + " " + gender, cv2.resize(debug_img, (500, 500), interpolation=cv2.INTER_NEAREST))
 
         return dataDictArray
     

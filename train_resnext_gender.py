@@ -22,20 +22,22 @@ from utils import visualize_confusion_matrix
 from sklearn.metrics import precision_score, recall_score, accuracy_score, confusion_matrix
 import SeResNeXt as SeResNeXt
 
+from torch.utils.data import DataLoader, WeightedRandomSampler
+
 cudnn.benchmark = True
 cudnn.enabled = True
 
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--epochs', type=int, default=300, help='num of training epochs')
-    parser.add_argument('--batch_size', type=int, default=64, help="training batch size")
+    parser.add_argument('--batch_size', type=int, default=128, help="training batch size")
     parser.add_argument('--tensorboard', type=str, default='checkpoint/tensorboard', help='path log dir of tensorboard')
     parser.add_argument('--logging', type=str, default='checkpoint', help='path of logging')
-    parser.add_argument('--lr', type=float, default=0.005, help='learning rate')
+    parser.add_argument('--lr', type=float, default=0.0005, help='learning rate')
     parser.add_argument('--weight_decay', type=float, default=1e-6, help='optimizer weight decay')
-    parser.add_argument('--datapath', type=str, default='data/dataset_gender_UTK_aligned', help='root path of dataset')
-    parser.add_argument('--test_datapath', type=str, default='data/dataset_gender_UTK_aligned', help='root path of test dataset')
-    parser.add_argument('--pretrained', type=str,default='models gender/resnext_36_dataset_gender_UTK_64_0.005_40_1e-06.pth.tar',help='load checkpoint')
+    parser.add_argument('--datapath', type=str, default='data/dataset_gender_hybrid2_aligned', help='root path of dataset')
+    parser.add_argument('--test_datapath', type=str, default='data/dataset_gender_hybrid2_aligned', help='root path of test dataset')
+    parser.add_argument('--pretrained', type=str,default='models age/resnext_37_dataset_age_UTK_custom_64_0.005_40_1e-06.pth.tar',help='load checkpoint')
     parser.add_argument('--resume', action='store_true', help='resume from pretrained path specified in prev arg')
     parser.add_argument('--savepath', type=str, default='checkpoint', help='save checkpoint path')
     parser.add_argument('--savefreq', type=int, default=1, help="save weights each freq num of epochs")
@@ -66,7 +68,7 @@ writer = tensorboard.SummaryWriter(args.tensorboard)
 
 transform = transforms.Compose([# transforms.Grayscale(num_output_channels=1),
                                 # transforms.ToPILImage(),
-                                transforms.ColorJitter(brightness=(0.7,1.3),contrast=(0.7,1.3),saturation=(0.7,1.3),hue=(-0.05,0.05)),
+                                transforms.ColorJitter(brightness=(0.5,1.5),contrast=(0.5,1.5),saturation=(0.5,1.5),hue=(-0.1,0.1)),
                                 transforms.RandomHorizontalFlip(),
                                 # transforms.RandomRotation(degrees=10),
                                 # transforms.RandomEqualize(p=1),
@@ -74,14 +76,29 @@ transform = transforms.Compose([# transforms.Grayscale(num_output_channels=1),
                                 transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
                                 ])
 
-
 def main():
+
     # ========= dataloaders ===========
     trainDataset = datasets.ImageFolder(args.datapath + "/Train", transform=transform)
+
+    class_weights = []
+
+    for root, subdir, files in os.walk(args.datapath + "/Train"):
+        if len(files) > 0:
+            class_weights.append(1/len(files))
+
+    #sample_weights = [0] * len(trainDataset)
+
+    #for idx, (data,label) in enumerate(trainDataset):
+    #    class_weight = class_weights[label]
+    #    sample_weights[idx] = class_weight
+
+    #sampler = WeightedRandomSampler(sample_weights, num_samples=len(sample_weights), replacement=True)
+
     train_dataloader = torch.utils.data.DataLoader(trainDataset, batch_size=args.batch_size, shuffle=True)
 
     testDataset = datasets.ImageFolder(args.test_datapath + "/Test", transform=transform)
-    test_dataloader = torch.utils.data.DataLoader(testDataset, batch_size=args.batch_size, shuffle=True)
+    test_dataloader = torch.utils.data.DataLoader(testDataset, batch_size=args.batch_size)
 
     print(trainDataset.class_to_idx)
 
@@ -90,7 +107,7 @@ def main():
     # ======== models & loss ==========
     resnext = SeResNeXt.se_resnext50(num_classes=2)
 
-    loss = nn.CrossEntropyLoss().to(device)
+    loss = nn.CrossEntropyLoss(weight=torch.tensor(class_weights).to(device))
 
     # ========= load weights ===========
     if args.resume or args.evaluate:

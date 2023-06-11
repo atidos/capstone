@@ -78,6 +78,29 @@ def plotLoss(data, labels=[], colors=[]):
 
 plt.title("resnext50_dataset_age_64_0.005_40_1e-06")
 
-a = get_train_data("logs/resnext50_dataset_age_UTK_64_0.005_40_1e-06")
-plotLoss([a])
+#a = get_train_data("logs/resnext50_dataset_age_UTK_64_0.005_40_1e-06")
+#plotLoss([a])
 
+X = ["batch size = 64\nlr = 0.005",
+     "batch size = 64\nlr = 0.0001",
+     "batch size = 64\nlr = 0.0005",
+     "batch size = 128\nlr = 0.0005",
+]
+
+X_axis = np.arange(len(X))
+
+Y_acc = [76.4,76.8,77.3,78.1]
+Y_val = [0.55,0.58,0.564,0.584]
+
+fig, ax1 = plt.subplots()
+
+ax2 = ax1.twinx()
+ax1.bar(X_axis - 0.2, Y_acc, 0.4, color="b", label = 'Accuracy')
+ax2.bar(X_axis + 0.2, Y_val, 0.4, color="r", label = 'Validation Loss')
+plt.xticks(X_axis, X)
+plt.title("Comparison of model's final iterations")
+ax1.set_ylabel('Accuracy', color='b')
+ax2.set_ylabel('Validation Loss', color='r')
+ax1.set_ylim([74,79])
+ax2.set_ylim([0.5,0.6])
+plt.show()
